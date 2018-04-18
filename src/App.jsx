@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './App.css';
 import WebsocketProvider from './WebsocketProvider';
 
 class App extends Component {
+  static propTypes = {
+    userId: PropTypes.string.isRequired,
+  };
+
   state = {
     messageInput: '',
     messages: [],
@@ -32,7 +37,7 @@ class App extends Component {
                   sendMessage(text);
                   this.addMesssage(
                     Date.now(),
-                    'We',
+                    this.props.userId,
                     text
                   );
                   this.setState( { messageInput: '' })

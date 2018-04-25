@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './App.css';
 import WebsocketProvider from './WebsocketProvider';
 
+const getWebsocketUrl = userId => `ws://localhost:8080/events?user=${userId}`
+
 class App extends Component {
   static propTypes = {
     userId: PropTypes.string.isRequired,
@@ -23,7 +25,7 @@ class App extends Component {
     return (
       <div className="App">
         <WebsocketProvider
-          websocketUrl={"ws://localhost:8080/events"}
+          websocketUrl={getWebsocketUrl(this.props.userId)}
           render={sendMessage => (
             <input
               type="text"
@@ -48,10 +50,16 @@ class App extends Component {
           )}
           onMessage={e => {
             console.log('Got message', e);
+            const textParticles = e.data.split(":");
+            if (!textParticles.length >= 2) {
+              return;
+            }
+            const sender = textParticles[0];
+            const message = textParticles.slice(1);
             this.addMesssage(
               Date.now(),
-              'Them',
-              e.data
+              sender,
+              message
             );
           }}
         />

@@ -36,7 +36,11 @@ class App extends Component {
               onKeyPress={e => {
                 const text = e.target.value;
                 if (e.key === 'Enter' && text) {
-                  sendMessage(text);
+                  sendMessage({
+                    type: 'ChatMessage',
+                    author: this.props.userId,
+                    message: text,
+                  });
                   this.addMesssage(
                     Date.now(),
                     this.props.userId,
@@ -48,19 +52,19 @@ class App extends Component {
               autoFocus
             />
           )}
-          onMessage={e => {
-            console.log('Got message', e);
-            const textParticles = e.data.split(":");
-            if (!textParticles.length >= 2) {
-              return;
+          onMessage={m => {
+            console.log('Got message', m);
+            switch (m.type) {
+              case 'ChatMessage':
+                this.addMesssage(
+                  Date.now(),
+                  m.author,
+                  m.message,
+                );
+                return;
+              default:
+                console.warn('Received an unexpected message', m);
             }
-            const sender = textParticles[0];
-            const message = textParticles.slice(1);
-            this.addMesssage(
-              Date.now(),
-              sender,
-              message
-            );
           }}
         />
         <div className="messages">

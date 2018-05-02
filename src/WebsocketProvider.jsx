@@ -18,7 +18,12 @@ class WebsocketProvider extends Component {
     };
 
     this.socket.onmessage = event => {
-      this.props.onMessage(event);
+      try {
+        const message = JSON.parse(event.data);
+        this.props.onMessage(message);
+      } catch (e) {
+        console.error(e);
+      }
     };
   }
 
@@ -27,7 +32,7 @@ class WebsocketProvider extends Component {
   }
 
   sendMessage = payload => {
-    this.socket && this.socket.send(payload);
+    this.socket && this.socket.send(JSON.stringify(payload));
   };
 
   render() {

@@ -2,42 +2,54 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class WebsocketProvider extends Component {
-  static propTypes = {
-    websocketUrl: PropTypes.string.isRequired,
-    onMessage: PropTypes.func.isRequired,
-    render: PropTypes.func.isRequired,
-  };
+	static propTypes = {
+		websocketUrl: PropTypes.string.isRequired,
+		onMessage: PropTypes.func.isRequired,
+		render: PropTypes.func.isRequired,
+	};
 
-  socket = null;
+	socket = null;
 
-  componentWillMount() {
-    this.socket = new WebSocket(this.props.websocketUrl);
+	componentWillMount() {
+		this.initWebsocket();
+	}
 
-    this.socket.onopen = event => {
-      console.log('Websocket open', event);
-    };
+	initWebsocket = () => {
+		const socket = new WebSocket(this.props.websocketUrl);
 
-    this.socket.onmessage = event => {
-      try {
-        const message = JSON.parse(event.data);
-        this.props.onMessage(message);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-  }
+		socket.onopen = event => {
+			console.log('Websocket open', event);
+		};
 
-  componentWillUnmount() {
-    this.socket.close();
-  }
+		socket.onmessage = event => {
+			try {
+				const message = JSON.parse(event.data);
+				this.props.onMessage(message);
+			} catch (e) {
+				console.error(e);
+			}
+		};
 
-  sendMessage = payload => {
-    this.socket && this.socket.send(JSON.stringify(payload));
-  };
+		socket.onclose = () => {
+		  // TODO: Implement exponential backoff reconnect
+			this.socket = null;
+			this.initWebsocket();
+		};
 
-  render() {
-    return this.props.render(this.sendMessage);
-  }
+		this.socket = socket;
+	};
+
+	componentWillUnmount() {
+		this.socket.close();
+	}
+
+	sendMessage = payload => {
+		this.socket && this.socket.send(JSON.stringify(payload));
+	};
+
+	render() {
+		return this.props.render(this.sendMessage);
+	}
 }
 
 export default WebsocketProvider;

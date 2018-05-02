@@ -17,7 +17,7 @@
 
 .message {
   display: flow;
-  padding: .2em 0;
+  padding: .4em;
 }
 
 .message_sender {
@@ -31,4 +31,14 @@
 
 .message_text {
   flex-grow: 1;
+}
+
+.login {
+  margin: .2em 0;
+  padding: .4em;
+  background: gold;
+}
+
+.login_user {
+  font-weight: 700;
 }

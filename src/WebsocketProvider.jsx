@@ -1,11 +1,12 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Component } from "react";
+import PropTypes from "prop-types";
 
 class WebsocketProvider extends Component {
   static propTypes = {
+    userId: PropTypes.string.isRequired,
     websocketUrl: PropTypes.string.isRequired,
     onMessage: PropTypes.func.isRequired,
-    render: PropTypes.func.isRequired,
+    render: PropTypes.func.isRequired
   };
 
   socket = null;
@@ -14,7 +15,11 @@ class WebsocketProvider extends Component {
     this.socket = new WebSocket(this.props.websocketUrl);
 
     this.socket.onopen = event => {
-      console.log('Websocket open', event);
+      console.log("Websocket open", event);
+      this.sendMessage({
+        type: "Login",
+        user: this.props.userId
+      });
     };
 
     this.socket.onmessage = event => {
@@ -32,7 +37,16 @@ class WebsocketProvider extends Component {
   }
 
   sendMessage = payload => {
-    this.socket && this.socket.send(JSON.stringify(payload));
+    if (!this.socket) {
+      console.warn(
+        "Unable to send message because socket is not open!",
+        payload
+      );
+      return;
+    }
+
+    console.log("Sending message", payload);
+    this.socket.send(JSON.stringify(payload));
   };
 
   render() {

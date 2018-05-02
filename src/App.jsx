@@ -110,6 +110,9 @@ class App extends Component {
                     logged in!
                   </div>
                 );
+              default:
+                console.warn("Unable to render message", m);
+                return null;
             }
           })}
         </div>

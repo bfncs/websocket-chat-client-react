@@ -1,20 +1,25 @@
 {
-  "name": "wschat-client",
+  "name": "wschat-client-ts",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "prop-types": "^15.6.1",
-    "react": "^16.3.1",
-    "react-dom": "^16.3.1",
-    "react-scripts": "1.1.4"
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-scripts-ts": "2.15.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom",
+    "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "prettier": "^1.12.1"
+    "@types/jest": "^22.2.3",
+    "@types/node": "^10.0.3",
+    "@types/react": "^16.3.13",
+    "@types/react-dom": "^16.0.5",
+    "tslint-config-prettier": "^1.12.0",
+    "tslint-eslint-rules": "^5.1.0",
+    "typescript": "^2.8.3"
   }
 }

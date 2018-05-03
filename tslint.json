@@ -1,0 +1,16 @@
+{
+  "extends": ["tslint:latest", "tslint-react", "tslint-eslint-rules", "tslint-config-prettier"],
+  "rules": {
+    "no-var-requires": false,
+    "no-any": true,
+    "member-access": false,
+    "object-literal-sort-keys": false,
+    "typedef": [
+      true,
+      "call-signature",
+      "property-declaration",
+      "parameter",
+      "member-variable-declaration"
+    ]
+  }
+}

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import './App.css';
+import * as React from "react";
+import "./App.css";
 import WebsocketProvider, { MessageSender } from "./WebsocketProvider";
 
 interface IChatMessage {
@@ -23,38 +23,36 @@ interface IProps {
 
 interface IState {
   messageInput: string;
-  messages: IMessage[],
+  messages: IMessage[];
 }
 
-const getWebsocketUrl = (userId: string) => `ws://localhost:8080/events?user=${userId}`;
+const getWebsocketUrl = (userId: string) =>
+  `ws://localhost:8080/events?user=${userId}`;
 
 class App extends React.Component<IProps, IState> {
-
   state: IState = {
     messageInput: "",
-    messages: [],
+    messages: []
   };
 
   addChatMessage = (msg: IChatMessage) => {
     this.setState(state => ({
-      messages: [
-        ...state.messages,
-        msg,
-      ]
+      messages: [...state.messages, msg]
     }));
   };
 
   addLogin = (msg: ILogin) => {
     this.setState(state => ({
-      messages: [
-        ...state.messages,msg
-      ]
+      messages: [...state.messages, msg]
     }));
   };
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ messageInput: e.target.value })
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.setState({ messageInput: e.target.value });
 
-  handleKeyPress = (sendMessage: MessageSender<IMessage>) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+  handleKeyPress = (sendMessage: MessageSender<IMessage>) => (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     const { messageInput } = this.state;
     if (e.key === "Enter" && messageInput) {
       sendMessage({
@@ -67,11 +65,11 @@ class App extends React.Component<IProps, IState> {
         type: "ChatMessage",
         id: Date.now().toString(),
         author: this.props.userId,
-        message: messageInput,
+        message: messageInput
       });
       this.setState({ messageInput: "" });
     }
-  }
+  };
 
   handleMessage = (message: IMessage) => {
     // tslint:disable-next-line no-console
@@ -82,14 +80,14 @@ class App extends React.Component<IProps, IState> {
           type: "ChatMessage",
           author: message.author,
           id: Date.now().toString(),
-          message: message.message,
+          message: message.message
         });
         return;
       case "Login":
         this.addLogin({
           type: "Login",
           id: Date.now().toString(),
-          user: message.user,
+          user: message.user
         });
         return;
       default:
@@ -103,7 +101,7 @@ class App extends React.Component<IProps, IState> {
       type: "Login",
       id: Date.now().toString(),
       user: this.props.userId
-    })
+    });
   };
 
   renderContent = (sendMessage: MessageSender<IMessage>) => (
@@ -145,8 +143,7 @@ class App extends React.Component<IProps, IState> {
                   <div key={m.id} className="login">
                     <span key={m.id} className="login_user">
                       {m.user}
-                    </span>
-                    {" "}
+                    </span>{" "}
                     logged in!
                   </div>
                 );

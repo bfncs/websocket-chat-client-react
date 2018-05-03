@@ -41,18 +41,14 @@ class App extends React.Component<IProps, IState> {
   ) => {
     const { messageInput } = this.state;
     if (e.key === "Enter" && messageInput) {
-      sendMessage({
+      const msg: IChatMessage = {
         type: "ChatMessage",
         id: Date.now().toString(),
         author: this.props.userId,
         message: messageInput
-      });
-      this.addChatMessage({
-        type: "ChatMessage",
-        id: Date.now().toString(),
-        author: this.props.userId,
-        message: messageInput
-      });
+      };
+      sendMessage(msg);
+      this.addChatMessage(msg);
       this.setState({ messageInput: "" });
     }
   };

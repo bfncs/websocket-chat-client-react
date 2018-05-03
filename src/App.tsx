@@ -104,57 +104,55 @@ class App extends React.Component<IProps, IState> {
     });
   };
 
-  renderContent = (sendMessage: MessageSender<IMessage>) => (
-    <input
-      type="text"
-      className={"messageInput"}
-      value={this.state.messageInput}
-      placeholder={"Type message…"}
-      onChange={this.handleChange}
-      onKeyPress={this.handleKeyPress(sendMessage)}
-      autoFocus={true}
-    />
-  );
-
   public render(): JSX.Element {
     return (
-      <div className="App">
-        <WebsocketProvider
-          userId={this.props.userId}
-          websocketUrl={getWebsocketUrl(this.props.userId)}
-          render={this.renderContent}
-          onConnected={this.handleConnected}
-          onMessage={this.handleMessage}
-        />
-        <div className="messages">
-          {this.state.messages.map(m => {
-            switch (m.type) {
-              case "ChatMessage":
-                return (
-                  <div key={m.id} className="message">
-                    <span key={m.id} className="message_sender">
-                      {m.author}
-                    </span>
-                    <span className="message_text">{m.message}</span>
-                  </div>
-                );
-              case "Login":
-                return (
-                  <div key={m.id} className="login">
-                    <span key={m.id} className="login_user">
-                      {m.user}
-                    </span>{" "}
-                    logged in!
-                  </div>
-                );
-              default:
-                // tslint:disable-next-line no-console
-                console.warn("Unable to render message", m);
-                return null;
-            }
-          })}
-        </div>
-      </div>
+      <WebsocketProvider
+        websocketUrl={getWebsocketUrl(this.props.userId)}
+        onConnected={this.handleConnected}
+        onMessage={this.handleMessage}
+      >
+        {sendMessage => (
+          <div className="App">
+            <input
+              type="text"
+              className={"messageInput"}
+              value={this.state.messageInput}
+              placeholder={"Type message…"}
+              onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress(sendMessage)}
+              autoFocus={true}
+            />
+            <div className="messages">
+              {this.state.messages.map(m => {
+                switch (m.type) {
+                  case "ChatMessage":
+                    return (
+                      <div key={m.id} className="message">
+                        <span key={m.id} className="message_sender">
+                          {m.author}
+                        </span>
+                        <span className="message_text">{m.message}</span>
+                      </div>
+                    );
+                  case "Login":
+                    return (
+                      <div key={m.id} className="login">
+                        <span key={m.id} className="login_user">
+                          {m.user}
+                        </span>{" "}
+                        logged in!
+                      </div>
+                    );
+                  default:
+                    // tslint:disable-next-line no-console
+                    console.warn("Unable to render message", m);
+                    return null;
+                }
+              })}
+            </div>
+          </div>
+        )}
+      </WebsocketProvider>
     );
   }
 }

@@ -3,11 +3,10 @@ import { Component } from "react";
 export type MessageSender<M> = (payload: M) => void;
 
 interface IProps<M> {
-  userId: string;
   websocketUrl: string;
   onMessage: (msg: M) => void;
   onConnected: (sendMessage: MessageSender<M>) => void;
-  render: (sendMessage: MessageSender<M>) => JSX.Element | null;
+  children: (sendMessage: MessageSender<M>) => JSX.Element | null;
 }
 
 class WebsocketProvider<Message> extends Component<IProps<Message>> {
@@ -66,7 +65,7 @@ class WebsocketProvider<Message> extends Component<IProps<Message>> {
   };
 
   render(): JSX.Element | null {
-    return this.props.render(this.sendMessage);
+    return this.props.children(this.sendMessage);
   }
 }
 

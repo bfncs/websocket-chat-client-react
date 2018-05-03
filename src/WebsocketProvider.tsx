@@ -9,6 +9,8 @@ interface IProps<M> {
   children: (sendMessage: MessageSender<M>) => JSX.Element | null;
 }
 
+const KEEPALIVE = "keepalive";
+
 class WebsocketProvider<Message> extends Component<IProps<Message>> {
   socket: WebSocket | null = null;
 
@@ -25,12 +27,17 @@ class WebsocketProvider<Message> extends Component<IProps<Message>> {
     };
 
     socket.onmessage = (event: MessageEvent) => {
+      if (event.data === KEEPALIVE) {
+        this.sendMessageString(KEEPALIVE);
+        return;
+      }
+
       try {
         const message = JSON.parse(event.data);
         this.props.onMessage(message);
-      } catch (e) {
+      } catch (error) {
         // tslint:disable-next-line no-console
-        console.error(e);
+        console.error(error);
       }
     };
 
@@ -50,6 +57,17 @@ class WebsocketProvider<Message> extends Component<IProps<Message>> {
   }
 
   sendMessage = (payload: Message): void => {
+    try {
+      // tslint:disable-next-line no-console
+      console.log("Sending message", payload);
+      this.sendMessageString(JSON.stringify(payload));
+    } catch (e) {
+      // tslint:disable-next-line no-console
+      console.warn("Unable to stringify message.", payload);
+    }
+  };
+
+  sendMessageString = (payload: string): void => {
     if (!this.socket) {
       // tslint:disable-next-line no-console
       console.warn(
@@ -59,9 +77,7 @@ class WebsocketProvider<Message> extends Component<IProps<Message>> {
       return;
     }
 
-    // tslint:disable-next-line no-console
-    console.log("Sending message", payload);
-    this.socket.send(JSON.stringify(payload));
+    this.socket.send(payload);
   };
 
   render(): JSX.Element | null {

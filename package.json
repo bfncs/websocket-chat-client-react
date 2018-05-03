@@ -12,6 +12,7 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
+    "lint": "tslint --project tsconfig.json 'src/**/*.{ts,tsx}'",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,md}",
     "precommit": "lint-staged"
   },

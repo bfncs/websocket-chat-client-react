@@ -1,21 +1,7 @@
 import * as React from "react";
 import "./App.css";
+import { IChatMessage, ILogin, IMessage, Messages } from "./messages";
 import WebsocketProvider, { MessageSender } from "./WebsocketProvider";
-
-interface IChatMessage {
-  type: "ChatMessage";
-  id: string;
-  author: string;
-  message: string;
-}
-
-interface ILogin {
-  type: "Login";
-  id: string;
-  user: string;
-}
-
-type IMessage = IChatMessage | ILogin;
 
 interface IProps {
   userId: string;
@@ -123,32 +109,7 @@ class App extends React.Component<IProps, IState> {
               autoFocus={true}
             />
             <div className="messages">
-              {this.state.messages.map(m => {
-                switch (m.type) {
-                  case "ChatMessage":
-                    return (
-                      <div key={m.id} className="message">
-                        <span key={m.id} className="message_sender">
-                          {m.author}
-                        </span>
-                        <span className="message_text">{m.message}</span>
-                      </div>
-                    );
-                  case "Login":
-                    return (
-                      <div key={m.id} className="login">
-                        <span key={m.id} className="login_user">
-                          {m.user}
-                        </span>{" "}
-                        logged in!
-                      </div>
-                    );
-                  default:
-                    // tslint:disable-next-line no-console
-                    console.warn("Unable to render message", m);
-                    return null;
-                }
-              })}
+              <Messages messages={this.state.messages} />
             </div>
           </div>
         )}
